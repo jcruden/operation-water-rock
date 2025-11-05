@@ -23,7 +23,8 @@ let adminState = {
     dares: [],
     users: [],
     adminState: { unlocked: false },
-    currentView: 'dares' // 'dares', 'users', 'settings'
+    currentView: 'dares', // 'dares', 'users', 'settings'
+    loginHandlerAttached: false
 };
 
 // Initialize admin panel when DOM is loaded
@@ -49,11 +50,57 @@ function showLoginPrompt() {
     const passwordInput = document.getElementById('adminPasswordInput');
     const errorDiv = document.getElementById('adminLoginError');
     
-    // Handle password input
-    passwordInput.addEventListener('keypress', async function(e) {
+    // Clear any previous value and error
+    if (passwordInput) {
+        passwordInput.value = '';
+        passwordInput.disabled = false;
+        passwordInput.readOnly = false;
+    }
+    if (errorDiv) {
+        errorDiv.style.display = 'none';
+    }
+    
+    // Remove previous event listeners by cloning the element
+    // This ensures we start fresh with no lingering listeners
+    if (!passwordInput) {
+        console.error('Password input not found');
+        return;
+    }
+    
+    const newInput = passwordInput.cloneNode(true);
+    passwordInput.parentNode.replaceChild(newInput, passwordInput);
+    adminState.loginHandlerAttached = false;
+    
+    // Get reference to the new input element
+    const input = document.getElementById('adminPasswordInput');
+    
+    if (!input) {
+        console.error('Password input not found after cloning');
+        return;
+    }
+    
+    // Ensure input is fully enabled and focusable
+    input.disabled = false;
+    input.readOnly = false;
+    input.removeAttribute('disabled');
+    input.removeAttribute('readonly');
+    input.style.display = 'block';
+    input.style.visibility = 'visible';
+    input.style.opacity = '1';
+    
+    // Ensure input can receive keyboard events
+    input.setAttribute('tabindex', '0');
+    input.setAttribute('autofocus', '');
+    
+    // Force input to be interactive
+    input.contentEditable = false;
+    
+    // Handle password input - attach fresh listeners
+    const handleKeyPress = async function(e) {
         if (e.key === 'Enter') {
-            const password = passwordInput.value.trim();
-            errorDiv.style.display = 'none';
+            e.preventDefault();
+            const password = input.value.trim();
+            if (errorDiv) errorDiv.style.display = 'none';
             
             if (!password) {
                 return;
@@ -66,20 +113,50 @@ function showLoginPrompt() {
                 // Authenticated
                 sessionStorage.setItem('adminAuthenticated', 'true');
                 sessionStorage.setItem('adminUserInfo', JSON.stringify(userInfo));
+                input.removeEventListener('keypress', handleKeyPress);
+                adminState.loginHandlerAttached = false;
                 showAdminPanel();
             } else {
                 // Access denied
-                errorDiv.style.display = 'block';
-                passwordInput.value = '';
+                if (errorDiv) errorDiv.style.display = 'block';
+                input.value = '';
                 setTimeout(() => {
-                    errorDiv.style.display = 'none';
+                    if (errorDiv) errorDiv.style.display = 'none';
                 }, 3000);
             }
         }
+    };
+    
+    // Attach event listeners - always attach after cloning
+    input.addEventListener('keypress', handleKeyPress);
+    
+    // Also listen for keydown events to catch all keys (some browsers don't fire keypress for all keys)
+    input.addEventListener('keydown', function(e) {
+        // Allow all keys to work normally - don't prevent default
+        // Only handle Enter in keypress to avoid double-firing
+        if (e.key === 'Enter') {
+            // Let keypress handle it, but ensure it's not blocked
+        }
     });
     
-    // Focus input
-    setTimeout(() => passwordInput.focus(), 100);
+    // Listen for input events to ensure typing works
+    input.addEventListener('input', function(e) {
+        // Input is working - ensure visibility
+        input.style.display = 'block';
+        input.style.visibility = 'visible';
+        input.style.opacity = '1';
+    });
+    
+    adminState.loginHandlerAttached = true;
+    
+    // Focus input - use multiple methods for reliability
+    setTimeout(() => {
+        input.focus();
+        // Double-check focus
+        if (document.activeElement !== input) {
+            input.focus();
+        }
+    }, 50);
 }
 
 /**

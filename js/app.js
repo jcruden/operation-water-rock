@@ -8,14 +8,25 @@ import { validatePassword, subscribeToAdminState } from './firebase-service.js';
 
 // Initialize the application when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
-    const typewriterText = document.getElementById('typewriterText');
-    const typewriterContainer = document.getElementById('typewriterContainer');
-    const passwordPromptContainer = document.getElementById('passwordPromptContainer');
-    const passwordInput = document.getElementById('passwordInput');
-    const cursorBlink = document.getElementById('cursorBlink');
-    
-    // The text to type out
-    const introText = 'operation water rock';
+    try {
+        const typewriterText = document.getElementById('typewriterText');
+        const typewriterContainer = document.getElementById('typewriterContainer');
+        const passwordPromptContainer = document.getElementById('passwordPromptContainer');
+        const passwordInput = document.getElementById('passwordInput');
+        const cursorBlink = document.getElementById('cursorBlink');
+        
+        // Ensure typewriter container is visible initially
+        if (typewriterContainer) {
+            typewriterContainer.style.display = 'block';
+            typewriterContainer.style.visibility = 'visible';
+        }
+        if (typewriterText) {
+            typewriterText.style.display = 'block';
+            typewriterText.style.visibility = 'visible';
+        }
+        
+        // The text to type out
+        const introText = 'operation water rock';
     
     // Typewriter effect function
     function typeWriter(text, element, speed = 100, callback) {
@@ -40,22 +51,28 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Show password prompt
     function showPasswordPrompt() {
+        if (!typewriterContainer || !passwordPromptContainer) return;
+        
         typewriterContainer.style.display = 'none';
         passwordPromptContainer.style.display = 'block';
         
         // Show "operation water rock" header at top
         const passwordHeader = document.getElementById('passwordHeader');
-        passwordHeader.style.display = 'block';
+        if (passwordHeader) passwordHeader.style.display = 'block';
         
         // Focus the password input
         setTimeout(() => {
-            passwordInput.focus();
-            updateCursorPosition();
+            if (passwordInput) {
+                passwordInput.focus();
+                updateCursorPosition();
+            }
         }, 100);
     }
     
     // Update cursor position based on input text width
     function updateCursorPosition() {
+        if (!passwordInput || !cursorBlink) return;
+        
         // Create a temporary span to measure text width
         const tempSpan = document.createElement('span');
         tempSpan.style.visibility = 'hidden';
@@ -80,9 +97,11 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Show access denied message with animation
     function showAccessDenied() {
+        if (!passwordPromptContainer || !typewriterContainer) return;
+        
         passwordPromptContainer.style.display = 'none';
         const passwordHeader = document.getElementById('passwordHeader');
-        passwordHeader.style.display = 'none';
+        if (passwordHeader) passwordHeader.style.display = 'none';
         
         const accessDeniedDiv = document.createElement('div');
         accessDeniedDiv.id = 'accessDeniedMessage';
@@ -94,12 +113,14 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Reset after animation
         setTimeout(() => {
-            passwordPromptContainer.style.display = 'block';
-            passwordHeader.style.display = 'block';
-            typewriterContainer.style.display = 'none';
+            if (passwordPromptContainer) passwordPromptContainer.style.display = 'block';
+            if (passwordHeader) passwordHeader.style.display = 'block';
+            if (typewriterContainer) typewriterContainer.style.display = 'none';
             accessDeniedDiv.remove();
-            passwordInput.value = '';
-            passwordInput.focus();
+            if (passwordInput) {
+                passwordInput.value = '';
+                passwordInput.focus();
+            }
             updateCursorPosition();
         }, 3000);
     }
@@ -113,6 +134,8 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Handle password input
     function handlePasswordInput(e) {
+        if (!passwordInput || !cursorBlink) return;
+        
         // Update cursor visibility based on input focus
         if (passwordInput.value.length > 0) {
             cursorBlink.style.opacity = '1';
@@ -151,28 +174,30 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Handle input focus/blur for cursor visibility
-    passwordInput.addEventListener('focus', function() {
-        cursorBlink.style.opacity = '1';
-    });
-    
-    passwordInput.addEventListener('blur', function() {
-        // Keep cursor visible even when blurred for accessibility
-        cursorBlink.style.opacity = '1';
-    });
-    
-    // Handle input changes
-    passwordInput.addEventListener('input', function() {
-        // Cursor stays visible during input
-        cursorBlink.style.opacity = '1';
-        // Update cursor position as text changes
-        updateCursorPosition();
-    });
-    
-    // Handle keydown events
-    passwordInput.addEventListener('keydown', handlePasswordInput);
-    
-    // Start the typewriter effect
-    typeWriter(introText, typewriterText, 80, showPasswordPrompt);
+    if (passwordInput && cursorBlink) {
+        passwordInput.addEventListener('focus', function() {
+            if (cursorBlink) cursorBlink.style.opacity = '1';
+        });
+        
+        passwordInput.addEventListener('blur', function() {
+            // Keep cursor visible even when blurred for accessibility
+            if (cursorBlink) cursorBlink.style.opacity = '1';
+        });
+        
+        // Handle input changes
+        passwordInput.addEventListener('input', function() {
+            // Cursor stays visible during input
+            if (cursorBlink) cursorBlink.style.opacity = '1';
+            // Update cursor position as text changes
+            updateCursorPosition();
+        });
+        
+        // Handle keydown events
+        passwordInput.addEventListener('keydown', handlePasswordInput);
+        
+        // Make sure password input is accessible via keyboard
+        passwordInput.setAttribute('tabindex', '0');
+    }
     
     // Ensure keyboard focus works properly
     // Focus the password input when it becomes visible
@@ -186,13 +211,12 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    observer.observe(passwordPromptContainer, {
-        attributes: true,
-        attributeFilter: ['style']
-    });
-    
-    // Make sure password input is accessible via keyboard
-    passwordInput.setAttribute('tabindex', '0');
+    if (passwordPromptContainer) {
+        observer.observe(passwordPromptContainer, {
+            attributes: true,
+            attributeFilter: ['style']
+        });
+    }
     
     // Handle window focus to re-focus input if needed
     window.addEventListener('focus', function() {
@@ -200,4 +224,27 @@ document.addEventListener('DOMContentLoaded', function() {
             passwordInput.focus();
         }
     });
+    
+    // Start the typewriter effect
+    if (typewriterText) {
+        typeWriter(introText, typewriterText, 80, showPasswordPrompt);
+    } else {
+        console.error('Typewriter text element not found');
+        // Fallback: show password prompt immediately
+        if (passwordPromptContainer) {
+            passwordPromptContainer.style.display = 'block';
+            const passwordHeader = document.getElementById('passwordHeader');
+            if (passwordHeader) passwordHeader.style.display = 'block';
+        }
+    }
+    } catch (error) {
+        console.error('Error initializing app:', error);
+        // Fallback: show password prompt
+        const passwordPromptContainer = document.getElementById('passwordPromptContainer');
+        if (passwordPromptContainer) {
+            passwordPromptContainer.style.display = 'block';
+            const passwordHeader = document.getElementById('passwordHeader');
+            if (passwordHeader) passwordHeader.style.display = 'block';
+        }
+    }
 });
