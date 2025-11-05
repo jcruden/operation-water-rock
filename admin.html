@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Operation Water Rock - Admin Panel</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- 
+        Admin panel for managing operation-water-rock content.
+        This page allows administrators to view and manage dares data.
+    -->
+    
+    <main class="terminal-container">
+        <header class="terminal-header">
+            <h1>OPERATION WATER ROCK</h1>
+            <p class="subtitle">Admin Panel v1.0</p>
+        </header>
+        
+        <div class="terminal-window">
+            <div class="terminal-output" id="adminOutput">
+                <!-- Admin interface will be dynamically inserted here -->
+                <div class="terminal-line">
+                    <span class="prompt">#</span> Admin panel initialized. Access granted.
+                </div>
+            </div>
+            
+            <div class="admin-controls">
+                <!-- 
+                    TODO: Add admin controls:
+                    - View all dares
+                    - Add new dares
+                    - Edit existing dares
+                    - Delete dares
+                    - Export/import data
+                -->
+            </div>
+            
+            <div class="terminal-input-container">
+                <span class="prompt">#</span>
+                <input 
+                    type="text" 
+                    id="adminInput" 
+                    class="terminal-input" 
+                    autocomplete="off"
+                    placeholder="Enter admin command..."
+                />
+            </div>
+        </div>
+        
+        <nav class="admin-nav">
+            <a href="index.html">← Back to Main</a>
+        </nav>
+    </main>
+    
+    <script src="js/admin.js"></script>
+</body>
+</html>

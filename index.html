@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Operation Water Rock</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="terminal-screen">
+        <!-- CRT scanlines overlay -->
+        <div class="scanlines"></div>
+        
+        <!-- CRT flicker overlay -->
+        <div class="flicker"></div>
+        
+        <!-- Main terminal content -->
+        <div class="terminal-content">
+            <div class="typewriter-container" id="typewriterContainer">
+                <div class="typewriter-text" id="typewriterText"></div>
+            </div>
+            
+            <div class="password-prompt-container" id="passwordPromptContainer" style="display: none;">
+                <div class="password-prompt">
+                    <span class="prompt-symbol">&gt;</span>
+                    <input 
+                        type="password" 
+                        id="passwordInput" 
+                        class="password-input" 
+                        autocomplete="off"
+                        aria-label="Password input"
+                        autofocus
+                    />
+                    <span class="cursor-blink" id="cursorBlink">█</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="js/app.js"></script>
+</body>
+</html>

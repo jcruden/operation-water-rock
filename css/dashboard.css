@@ -1,0 +1,586 @@
+/* Dashboard-specific styles for operation-water-rock */
+
+body.dashboard-page {
+    overflow-y: auto;
+}
+
+.dashboard-container {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    min-height: 100%;
+    padding: 20px;
+    overflow-x: hidden;
+}
+
+/* Dashboard header */
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #00ff00;
+    text-shadow: 0 0 5px #00ff00;
+}
+
+.header-left {
+    flex: 1;
+}
+
+.dashboard-title {
+    font-size: clamp(1.5rem, 3vw, 2.5rem);
+    color: #00ff00;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 10px;
+    text-shadow: 
+        0 0 5px #00ff00,
+        0 0 10px #00ff00;
+}
+
+.role-display {
+    font-size: clamp(0.9rem, 2vw, 1.2rem);
+    color: #00ff00;
+    text-shadow: 0 0 5px #00ff00;
+}
+
+.role-label {
+    opacity: 0.7;
+    margin-right: 10px;
+}
+
+.role-value {
+    font-weight: bold;
+    color: #00ff00;
+    text-transform: uppercase;
+}
+
+.header-right {
+    text-align: right;
+}
+
+.points-display {
+    font-size: clamp(1.2rem, 2.5vw, 2rem);
+    color: #00ff00;
+    text-shadow: 
+        0 0 5px #00ff00,
+        0 0 10px #00ff00;
+}
+
+.points-label {
+    opacity: 0.7;
+    margin-right: 10px;
+    font-size: 0.8em;
+}
+
+.points-value {
+    font-weight: bold;
+    font-size: 1.5em;
+}
+
+/* Dashboard main content */
+.dashboard-main {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    margin-bottom: 30px;
+}
+
+@media (max-width: 968px) {
+    .dashboard-main {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Control panel */
+.control-panel {
+    background: rgba(0, 255, 0, 0.05);
+    border: 1px solid #00ff00;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.2);
+}
+
+.panel-title {
+    font-size: clamp(1rem, 2vw, 1.5rem);
+    color: #00ff00;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 20px;
+    text-shadow: 0 0 5px #00ff00;
+    border-bottom: 1px solid #00ff00;
+    padding-bottom: 10px;
+}
+
+.control-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.control-btn {
+    background: transparent;
+    border: 2px solid #00ff00;
+    color: #00ff00;
+    padding: 15px 20px;
+    font-family: 'Courier New', 'Monaco', 'Menlo', 'Consolas', monospace;
+    font-size: clamp(0.9rem, 1.5vw, 1.1rem);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s ease;
+    text-shadow: 0 0 5px #00ff00;
+    position: relative;
+}
+
+.control-btn:hover:not(:disabled) {
+    background: rgba(0, 255, 0, 0.1);
+    box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
+    transform: translateX(5px);
+}
+
+.control-btn.locked {
+    opacity: 0.5;
+    cursor: not-allowed;
+    border-color: #666;
+    color: #666;
+}
+
+.control-btn.locked .btn-status {
+    color: #ff0000;
+    text-shadow: 0 0 5px #ff0000;
+}
+
+.control-btn:not(.locked) .btn-status {
+    color: #00ff00;
+    text-shadow: 0 0 5px #00ff00;
+}
+
+.btn-icon {
+    font-size: 1.2em;
+    margin-right: 10px;
+}
+
+.btn-label {
+    flex: 1;
+    text-align: left;
+}
+
+.btn-status {
+    font-size: 0.8em;
+    font-weight: bold;
+}
+
+/* Dares panel */
+.dares-panel {
+    background: rgba(0, 255, 0, 0.05);
+    border: 1px solid #00ff00;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.2);
+    max-height: 600px;
+    overflow-y: auto;
+}
+
+.dares-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #00ff00;
+    padding-bottom: 10px;
+}
+
+.trash-btn {
+    background: transparent;
+    border: 1px solid #ff0000;
+    color: #ff0000;
+    padding: 8px 15px;
+    font-family: 'Courier New', 'Monaco', 'Menlo', 'Consolas', monospace;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+    text-shadow: 0 0 5px #ff0000;
+}
+
+.trash-btn:hover {
+    background: rgba(255, 0, 0, 0.1);
+    box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+}
+
+.dares-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.dare-item {
+    background: rgba(0, 255, 0, 0.03);
+    border: 1px solid #00ff00;
+    padding: 15px;
+    transition: all 0.3s ease;
+}
+
+.dare-item:hover {
+    background: rgba(0, 255, 0, 0.08);
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+}
+
+.dare-item.selected {
+    border-color: #00ff00;
+    border-width: 2px;
+    background: rgba(0, 255, 0, 0.1);
+    box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
+}
+
+.dare-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+}
+
+.dare-number {
+    font-weight: bold;
+    color: #00ff00;
+    text-shadow: 0 0 5px #00ff00;
+}
+
+.dare-title {
+    flex: 1;
+    font-weight: bold;
+    color: #00ff00;
+    text-transform: uppercase;
+    text-shadow: 0 0 5px #00ff00;
+}
+
+.dare-difficulty {
+    padding: 3px 8px;
+    font-size: 0.7em;
+    text-transform: uppercase;
+    border: 1px solid;
+}
+
+.difficulty-easy {
+    color: #00ff00;
+    border-color: #00ff00;
+}
+
+.difficulty-medium {
+    color: #ffff00;
+    border-color: #ffff00;
+}
+
+.difficulty-hard {
+    color: #ff0000;
+    border-color: #ff0000;
+}
+
+.dare-body {
+    margin-bottom: 15px;
+}
+
+.dare-description {
+    color: #00ff00;
+    opacity: 0.9;
+    margin-bottom: 8px;
+    text-shadow: 0 0 3px #00ff00;
+}
+
+.dare-riddle,
+.dare-hint {
+    color: #ffff00;
+    margin-top: 8px;
+    padding: 8px;
+    background: rgba(255, 255, 0, 0.1);
+    border-left: 2px solid #ffff00;
+    text-shadow: 0 0 5px #ffff00;
+    font-style: italic;
+}
+
+.dare-category {
+    font-size: 0.8em;
+    color: #00ff00;
+    opacity: 0.7;
+    margin-top: 8px;
+    text-transform: uppercase;
+}
+
+.dare-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.dare-action-btn {
+    background: transparent;
+    border: 1px solid #00ff00;
+    color: #00ff00;
+    padding: 6px 12px;
+    font-family: 'Courier New', 'Monaco', 'Menlo', 'Consolas', monospace;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-shadow: 0 0 3px #00ff00;
+}
+
+.dare-action-btn:hover {
+    background: rgba(0, 255, 0, 0.2);
+    box-shadow: 0 0 8px rgba(0, 255, 0, 0.5);
+}
+
+.dare-action-btn.danger {
+    border-color: #ff0000;
+    color: #ff0000;
+    text-shadow: 0 0 3px #ff0000;
+}
+
+.dare-action-btn.danger:hover {
+    background: rgba(255, 0, 0, 0.2);
+    box-shadow: 0 0 8px rgba(255, 0, 0, 0.5);
+}
+
+.no-dares {
+    text-align: center;
+    color: #00ff00;
+    opacity: 0.5;
+    padding: 40px;
+    text-shadow: 0 0 5px #00ff00;
+}
+
+/* Answer modal */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: #000000;
+    border: 2px solid #00ff00;
+    padding: 30px;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+}
+
+.modal-title {
+    font-size: 1.5rem;
+    color: #00ff00;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 20px;
+    text-shadow: 0 0 5px #00ff00;
+    text-align: center;
+}
+
+.modal-input {
+    width: 100%;
+    background: transparent;
+    border: 1px solid #00ff00;
+    color: #00ff00;
+    padding: 12px;
+    font-family: 'Courier New', 'Monaco', 'Menlo', 'Consolas', monospace;
+    font-size: 1rem;
+    margin-bottom: 20px;
+    text-shadow: 0 0 3px #00ff00;
+}
+
+.modal-input:focus {
+    outline: none;
+    border-color: #00ff00;
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+}
+
+.modal-input::placeholder {
+    color: #003300;
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+.modal-btn {
+    background: transparent;
+    border: 2px solid;
+    padding: 10px 25px;
+    font-family: 'Courier New', 'Monaco', 'Menlo', 'Consolas', monospace;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.modal-btn.submit {
+    border-color: #00ff00;
+    color: #00ff00;
+    text-shadow: 0 0 5px #00ff00;
+}
+
+.modal-btn.submit:hover {
+    background: rgba(0, 255, 0, 0.1);
+    box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
+}
+
+.modal-btn.cancel {
+    border-color: #666;
+    color: #666;
+}
+
+.modal-btn.cancel:hover {
+    border-color: #999;
+    color: #999;
+}
+
+/* Dashboard footer */
+.dashboard-footer {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #00ff00;
+    text-align: center;
+}
+
+.logout-link {
+    color: #00ff00;
+    text-decoration: none;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    text-shadow: 0 0 5px #00ff00;
+    transition: all 0.3s ease;
+}
+
+.logout-link:hover {
+    color: #00ff00;
+    text-shadow: 0 0 10px #00ff00;
+}
+
+/* Dashboard message */
+.dashboard-message {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 25px;
+    background: rgba(0, 0, 0, 0.9);
+    border: 2px solid;
+    font-family: 'Courier New', 'Monaco', 'Menlo', 'Consolas', monospace;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    z-index: 2000;
+    animation: messageSlideIn 0.3s ease;
+    max-width: 300px;
+}
+
+@keyframes messageSlideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.message-success {
+    border-color: #00ff00;
+    color: #00ff00;
+    text-shadow: 0 0 5px #00ff00;
+}
+
+.message-error {
+    border-color: #ff0000;
+    color: #ff0000;
+    text-shadow: 0 0 5px #ff0000;
+}
+
+.message-info {
+    border-color: #00ff00;
+    color: #00ff00;
+    text-shadow: 0 0 5px #00ff00;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .dashboard-container {
+        padding: 15px;
+    }
+    
+    .dashboard-header {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .header-right {
+        text-align: left;
+        width: 100%;
+    }
+    
+    .control-btn {
+        padding: 12px 15px;
+        font-size: 0.9rem;
+    }
+    
+    .dares-panel {
+        max-height: 500px;
+    }
+    
+    .dashboard-message {
+        right: 10px;
+        top: 10px;
+        max-width: calc(100% - 20px);
+    }
+}
+
+@media (max-width: 480px) {
+    .dashboard-container {
+        padding: 10px;
+    }
+    
+    .dashboard-title {
+        font-size: 1.2rem;
+    }
+    
+    .control-btn {
+        flex-direction: column;
+        gap: 5px;
+        text-align: center;
+    }
+    
+    .btn-label {
+        text-align: center;
+    }
+    
+    .dare-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .dare-actions {
+        flex-direction: column;
+    }
+    
+    .dare-action-btn {
+        width: 100%;
+    }
+}

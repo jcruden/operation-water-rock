@@ -1,0 +1,341 @@
+/* 
+    Terminal-style CSS for operation-water-rock.
+    Full-screen CRT terminal aesthetic with black background, green text,
+    glow effects, scanlines, and flicker.
+*/
+
+/* Reset and base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+body.dashboard-page {
+    overflow-y: auto;
+}
+
+body {
+    font-family: 'Courier New', 'Monaco', 'Menlo', 'Consolas', monospace;
+    background-color: #000000;
+    color: #00ff00;
+    position: relative;
+}
+
+/* Full-screen terminal container */
+.terminal-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #000000;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* CRT scanlines overlay */
+.scanlines {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(
+        0deg,
+        rgba(0, 255, 0, 0.03) 0px,
+        rgba(0, 255, 0, 0.03) 1px,
+        transparent 1px,
+        transparent 2px
+    );
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* CRT flicker overlay */
+.flicker {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    pointer-events: none;
+    z-index: 2;
+    animation: flicker 8s infinite;
+}
+
+@keyframes flicker {
+    0%, 100% {
+        opacity: 1;
+    }
+    49.5% {
+        opacity: 1;
+    }
+    49.75% {
+        opacity: 0.98;
+    }
+    50% {
+        opacity: 1;
+    }
+    50.25% {
+        opacity: 0.98;
+    }
+    50.5% {
+        opacity: 1;
+    }
+}
+
+/* Main terminal content */
+.terminal-content {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    max-width: 90%;
+    text-align: center;
+    padding: 20px;
+}
+
+/* Typewriter container */
+.typewriter-container {
+    margin-bottom: 30px;
+}
+
+.typewriter-text {
+    font-size: clamp(1.2rem, 4vw, 2rem);
+    color: #00ff00;
+    text-shadow: 
+        0 0 5px #00ff00,
+        0 0 10px #00ff00,
+        0 0 15px #00ff00,
+        0 0 20px #00ff00;
+    line-height: 1.6;
+    letter-spacing: 0.1em;
+    text-transform: lowercase;
+    font-weight: normal;
+    animation: glow-pulse 2s ease-in-out infinite alternate;
+}
+
+@keyframes glow-pulse {
+    from {
+        text-shadow: 
+            0 0 5px #00ff00,
+            0 0 10px #00ff00,
+            0 0 15px #00ff00,
+            0 0 20px #00ff00;
+    }
+    to {
+        text-shadow: 
+            0 0 2px #00ff00,
+            0 0 5px #00ff00,
+            0 0 8px #00ff00,
+            0 0 12px #00ff00;
+    }
+}
+
+/* Password prompt container */
+.password-prompt-container {
+    margin-top: 40px;
+}
+
+.password-prompt {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-size: clamp(1rem, 3vw, 1.5rem);
+    color: #00ff00;
+    text-shadow: 
+        0 0 5px #00ff00,
+        0 0 10px #00ff00;
+}
+
+.prompt-symbol {
+    color: #00ff00;
+    font-weight: bold;
+    text-shadow: 
+        0 0 5px #00ff00,
+        0 0 10px #00ff00;
+}
+
+.password-input {
+    background-color: transparent;
+    border: none;
+    outline: none;
+    color: #00ff00;
+    font-family: 'Courier New', 'Monaco', 'Menlo', 'Consolas', monospace;
+    font-size: clamp(1rem, 3vw, 1.5rem);
+    text-shadow: 
+        0 0 5px #00ff00,
+        0 0 10px #00ff00;
+    padding: 0;
+    margin: 0;
+    width: 300px;
+    max-width: 80%;
+    caret-color: transparent;
+}
+
+.password-input:focus {
+    outline: none;
+}
+
+.password-input::placeholder {
+    color: #003300;
+}
+
+/* Cursor blink animation */
+.cursor-blink {
+    color: #00ff00;
+    font-weight: bold;
+    text-shadow: 
+        0 0 5px #00ff00,
+        0 0 10px #00ff00;
+    animation: blink 1s step-end infinite;
+    display: inline-block;
+    width: 0.6em;
+}
+
+@keyframes blink {
+    0%, 50% {
+        opacity: 1;
+    }
+    51%, 100% {
+        opacity: 0;
+    }
+}
+
+/* Access denied message */
+.access-denied-message {
+    font-size: clamp(1.5rem, 5vw, 3rem);
+    color: #ff0000;
+    text-shadow: 
+        0 0 5px #ff0000,
+        0 0 10px #ff0000,
+        0 0 15px #ff0000,
+        0 0 20px #ff0000;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    font-weight: bold;
+    animation: access-denied-shake 0.5s ease-in-out,
+               access-denied-pulse 0.5s ease-in-out 0.5s infinite alternate;
+    margin-top: 30px;
+}
+
+@keyframes access-denied-shake {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    10%, 30%, 50%, 70%, 90% {
+        transform: translateX(-10px);
+    }
+    20%, 40%, 60%, 80% {
+        transform: translateX(10px);
+    }
+}
+
+@keyframes access-denied-pulse {
+    from {
+        opacity: 1;
+        text-shadow: 
+            0 0 5px #ff0000,
+            0 0 10px #ff0000,
+            0 0 15px #ff0000,
+            0 0 20px #ff0000;
+    }
+    to {
+        opacity: 0.7;
+        text-shadow: 
+            0 0 10px #ff0000,
+            0 0 20px #ff0000,
+            0 0 30px #ff0000,
+            0 0 40px #ff0000;
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .terminal-content {
+        max-width: 95%;
+        padding: 15px;
+    }
+    
+    .typewriter-text {
+        font-size: 1.2rem;
+    }
+    
+    .password-prompt {
+        font-size: 1rem;
+    }
+    
+    .password-input {
+        width: 200px;
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .terminal-content {
+        padding: 10px;
+    }
+    
+    .typewriter-text {
+        font-size: 1rem;
+        letter-spacing: 0.05em;
+    }
+    
+    .password-prompt {
+        font-size: 0.9rem;
+        gap: 5px;
+    }
+    
+    .password-input {
+        width: 150px;
+        font-size: 0.9rem;
+    }
+}
+
+/* Accessibility: Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+    .typewriter-text {
+        animation: none;
+    }
+    
+    .cursor-blink {
+        animation: none;
+        opacity: 1;
+    }
+    
+    .flicker {
+        animation: none;
+    }
+    
+    .access-denied-message {
+        animation: none;
+        opacity: 1;
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .typewriter-text,
+    .password-prompt,
+    .prompt-symbol,
+    .password-input,
+    .cursor-blink {
+        text-shadow: none;
+        color: #00ff00;
+    }
+    
+    .access-denied-message {
+        text-shadow: none;
+        color: #ff0000;
+    }
+}

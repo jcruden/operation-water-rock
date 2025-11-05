@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Operation Water Rock - Dashboard</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body class="dashboard-page">
+    <div class="terminal-screen">
+        <!-- CRT scanlines overlay -->
+        <div class="scanlines"></div>
+        
+        <!-- CRT flicker overlay -->
+        <div class="flicker"></div>
+        
+        <!-- Dashboard content -->
+        <div class="dashboard-container">
+            <!-- Header -->
+            <header class="dashboard-header">
+                <div class="header-left">
+                    <h1 class="dashboard-title">OPERATION WATER ROCK</h1>
+                    <div class="role-display">
+                        <span class="role-label">ROLE:</span>
+                        <span class="role-value" id="roleDisplay">--</span>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <div class="points-display">
+                        <span class="points-label">POINTS:</span>
+                        <span class="points-value" id="pointsDisplay">0</span>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Main dashboard content -->
+            <main class="dashboard-main">
+                <!-- Control panel -->
+                <section class="control-panel">
+                    <h2 class="panel-title">CONTROL PANEL</h2>
+                    <div class="control-buttons">
+                        <button 
+                            id="completeDareBtn" 
+                            class="control-btn locked"
+                            disabled
+                            aria-label="Complete Dare"
+                        >
+                            <span class="btn-icon">✓</span>
+                            <span class="btn-label">COMPLETE DARE</span>
+                            <span class="btn-status">LOCKED</span>
+                        </button>
+                        
+                        <button 
+                            id="nextHintBtn" 
+                            class="control-btn locked"
+                            disabled
+                            aria-label="Next Hint"
+                        >
+                            <span class="btn-icon">?</span>
+                            <span class="btn-label">NEXT HINT</span>
+                            <span class="btn-status">LOCKED</span>
+                        </button>
+                        
+                        <button 
+                            id="enterAnswerBtn" 
+                            class="control-btn locked"
+                            disabled
+                            aria-label="Enter Answer"
+                        >
+                            <span class="btn-icon">→</span>
+                            <span class="btn-label">ENTER ANSWER</span>
+                            <span class="btn-status">LOCKED</span>
+                        </button>
+                    </div>
+                </section>
+                
+                <!-- Dares panel -->
+                <section class="dares-panel">
+                    <div class="dares-header">
+                        <h2 class="panel-title">ACTIVE DARES</h2>
+                        <button 
+                            id="trashAllBtn" 
+                            class="trash-btn"
+                            aria-label="Trash All Dares"
+                        >
+                            <span class="btn-icon">🗑</span>
+                            <span class="btn-label">TRASH ALL</span>
+                        </button>
+                    </div>
+                    <div class="dares-list" id="daresList">
+                        <!-- Dares will be dynamically inserted here -->
+                    </div>
+                </section>
+                
+                <!-- Answer input modal (hidden by default) -->
+                <div class="modal-overlay" id="answerModal" style="display: none;">
+                    <div class="modal-content">
+                        <h3 class="modal-title">ENTER ANSWER</h3>
+                        <input 
+                            type="text" 
+                            id="answerInput" 
+                            class="modal-input"
+                            placeholder="Type your answer..."
+                            autocomplete="off"
+                        />
+                        <div class="modal-buttons">
+                            <button id="submitAnswerBtn" class="modal-btn submit">SUBMIT</button>
+                            <button id="cancelAnswerBtn" class="modal-btn cancel">CANCEL</button>
+                        </div>
+                    </div>
+                </div>
+            </main>
+            
+            <!-- Footer -->
+            <footer class="dashboard-footer">
+                <a href="index.html" class="logout-link">← LOGOUT</a>
+            </footer>
+        </div>
+    </div>
+    
+    <script src="js/dashboard.js"></script>
+</body>
+</html>
