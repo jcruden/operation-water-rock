@@ -125,11 +125,11 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 3000);
     }
     
-    // Redirect to dashboard with role and token
+    // Redirect to instructions page with role and token
     function redirectToDashboard(userInfo) {
-        // Store user info in sessionStorage for dashboard
+        // Store user info in sessionStorage for instructions page
         sessionStorage.setItem('userInfo', JSON.stringify(userInfo));
-        window.location.href = `dashboard.html?role=${userInfo.role}&rid=${userInfo.userId}`;
+        window.location.href = `instructions.html?role=${userInfo.role}&rid=${userInfo.userId}`;
     }
     
     // Handle password input

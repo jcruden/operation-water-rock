@@ -428,4 +428,182 @@ export function getAllUserPoints() {
     }));
 }
 
+/**
+ * Save drink choice for a user
+ */
+export async function saveDrinkChoice(userId, role, drink) {
+    // Try Firestore first
+    if (db) {
+        try {
+            const drinkChoicesRef = collection(db, "drinkChoices");
+            // Check if user already has a drink choice
+            const q = query(drinkChoicesRef);
+            const snapshot = await getDocs(q);
+            
+            let existingDoc = null;
+            snapshot.docs.forEach(doc => {
+                if (doc.data().userId === userId) {
+                    existingDoc = doc;
+                }
+            });
+            
+            if (existingDoc) {
+                // Update existing choice
+                await updateDoc(existingDoc.ref, {
+                    drink: drink,
+                    updatedAt: serverTimestamp()
+                });
+            } else {
+                // Create new choice
+                await addDoc(drinkChoicesRef, {
+                    userId: userId,
+                    role: role,
+                    drink: drink,
+                    createdAt: serverTimestamp(),
+                    updatedAt: serverTimestamp()
+                });
+            }
+            return true;
+        } catch (error) {
+            console.error("Error saving drink choice to Firestore:", error);
+            throw error;
+        }
+    }
+    
+    // Fallback to localStorage
+    try {
+        const drinkChoicesStr = localStorage.getItem('drinkChoices') || '{}';
+        const drinkChoices = JSON.parse(drinkChoicesStr);
+        drinkChoices[userId] = {
+            userId: userId,
+            role: role,
+            drink: drink,
+            updatedAt: new Date().toISOString()
+        };
+        localStorage.setItem('drinkChoices', JSON.stringify(drinkChoices));
+        return true;
+    } catch (error) {
+        console.error("Error saving drink choice to localStorage:", error);
+        throw error;
+    }
+}
+
+/**
+ * Get drink choice for a user
+ */
+export async function getDrinkChoice(userId) {
+    // Try Firestore first
+    if (db) {
+        try {
+            const drinkChoicesRef = collection(db, "drinkChoices");
+            const q = query(drinkChoicesRef);
+            const snapshot = await getDocs(q);
+            
+            for (const doc of snapshot.docs) {
+                const data = doc.data();
+                if (data.userId === userId) {
+                    return data.drink;
+                }
+            }
+            return null;
+        } catch (error) {
+            console.error("Error getting drink choice from Firestore:", error);
+        }
+    }
+    
+    // Fallback to localStorage
+    try {
+        const drinkChoicesStr = localStorage.getItem('drinkChoices');
+        if (drinkChoicesStr) {
+            const drinkChoices = JSON.parse(drinkChoicesStr);
+            return drinkChoices[userId]?.drink || null;
+        }
+    } catch (error) {
+        console.error("Error getting drink choice from localStorage:", error);
+    }
+    
+    return null;
+}
+
+/**
+ * Get all drink choices (for admin view)
+ */
+export async function getAllDrinkChoices() {
+    // Try Firestore first
+    if (db) {
+        try {
+            const drinkChoicesRef = collection(db, "drinkChoices");
+            const snapshot = await getDocs(drinkChoicesRef);
+            
+            return snapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data()
+            }));
+        } catch (error) {
+            console.error("Error getting drink choices from Firestore:", error);
+        }
+    }
+    
+    // Fallback to localStorage
+    try {
+        const drinkChoicesStr = localStorage.getItem('drinkChoices');
+        if (drinkChoicesStr) {
+            const drinkChoices = JSON.parse(drinkChoicesStr);
+            return Object.entries(drinkChoices).map(([userId, data]) => ({
+                id: userId,
+                userId: userId,
+                ...data
+            }));
+        }
+    } catch (error) {
+        console.error("Error getting drink choices from localStorage:", error);
+    }
+    
+    return [];
+}
+
+/**
+ * Delete drink choice for a user
+ */
+export async function deleteDrinkChoice(userId) {
+    // Try Firestore first
+    if (db) {
+        try {
+            const drinkChoicesRef = collection(db, "drinkChoices");
+            const q = query(drinkChoicesRef);
+            const snapshot = await getDocs(q);
+            
+            // Find and delete the document for this user
+            for (const docSnapshot of snapshot.docs) {
+                const data = docSnapshot.data();
+                if (data.userId === userId) {
+                    await deleteDoc(docSnapshot.ref);
+                    return true;
+                }
+            }
+            return false; // No document found
+        } catch (error) {
+            console.error("Error deleting drink choice from Firestore:", error);
+            throw error;
+        }
+    }
+    
+    // Fallback to localStorage
+    try {
+        const drinkChoicesStr = localStorage.getItem('drinkChoices');
+        if (drinkChoicesStr) {
+            const drinkChoices = JSON.parse(drinkChoicesStr);
+            if (drinkChoices[userId]) {
+                delete drinkChoices[userId];
+                localStorage.setItem('drinkChoices', JSON.stringify(drinkChoices));
+                return true;
+            }
+        }
+        return false;
+    } catch (error) {
+        console.error("Error deleting drink choice from localStorage:", error);
+        throw error;
+    }
+}
+
 export { db };

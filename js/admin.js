@@ -19,7 +19,9 @@ import {
     getAllRiddles,
     addRiddle,
     updateRiddle,
-    deleteRiddle
+    deleteRiddle,
+    getAllDrinkChoices,
+    deleteDrinkChoice
 } from './firebase-service.js';
 
 // Admin state
@@ -290,6 +292,10 @@ async function processCommand(command) {
             case 'points':
                 await displayPointsList();
                 break;
+            case 'drinks':
+            case 'drink':
+                await displayDrinkChoices();
+                break;
             case 'add':
                 await handleAddDare(args);
                 break;
@@ -308,6 +314,13 @@ async function processCommand(command) {
                 break;
             case 'unlock':
                 await handleUnlock(args);
+                break;
+            case 'proceed':
+                await handleProceed(args);
+                break;
+            case 'reset':
+            case 'resetvote':
+                await handleResetVote(args);
                 break;
             case 'settings':
                 displaySettings();
@@ -330,24 +343,27 @@ async function processCommand(command) {
 function showHelp() {
     const helpText = `
 Available commands:
-  help              - Show this help message
-  list              - List all dares
-  list users        - List all users
-  list points       - List all player points
-  list riddles      - List all riddles
-  points            - List all player points (shortcut)
-  add "challenge"   - Add a new dare (simple one-line challenge)
-  edit <id> challenge "<value>" - Edit dare challenge
-  delete <id>       - Delete a dare by ID
-  riddle add <id> "riddle" "answer" "hint" - Add a new riddle
-  riddle edit <id> <field> "<value>" - Edit riddle (field: riddle, answer, or hint)
-  riddle delete <id> - Delete a riddle by ID
-  user add <role>   - Add a new user
-  user list         - List all users
-  user pass <id>    - Change user password
-  unlock <true|false> - Set unlocked state
-  settings          - Show admin settings
-  clear             - Clear output
+  help              - Show this help message\n
+  list              - List all dares\n
+  list users        - List all users\n
+  list points       - List all player points\n
+  list riddles      - List all riddles\n
+  points            - List all player points (shortcut)\n
+  drinks            - List all drink choices\n
+  add "challenge"   - Add a new dare (simple one-line challenge)\n
+  edit <id> challenge "<value>" - Edit dare challenge\n
+  delete <id>       - Delete a dare by ID\n
+  riddle add <id> "riddle" "answer" "hint" - Add a new riddle\n
+  riddle edit <id> <field> "<value>" - Edit riddle (field: riddle, answer, or hint)\n
+  riddle delete <id> - Delete a riddle by ID\n  
+  user add <role>   - Add a new user\n
+  user list         - List all users\n
+  user pass <id>    - Change user password\n
+  unlock <true|false> - Set unlocked state\n
+  proceed <true|false> - Allow users to proceed from instructions to dashboard\n
+  reset vote <userId>  - Reset drink vote for a user (e.g., reset vote player1)\n
+  settings          - Show admin settings\n
+  clear             - Clear output    
 `;
     addOutputLine(helpText, 'info');
 }
@@ -426,8 +442,10 @@ async function displayPointsList() {
 function displaySettings() {
     adminState.currentView = 'settings';
     const unlocked = adminState.adminState.unlocked ? 'true' : 'false';
-    addOutputLine(`\nAdmin Settings:\n  Unlocked: ${unlocked}\n`, 'info');
-    addOutputLine('Use "unlock true" or "unlock false" to change.', 'info');
+    const canProceed = adminState.adminState.canProceedToDashboard ? 'true' : 'false';
+    addOutputLine(`\nAdmin Settings:\n  Unlocked: ${unlocked}\n  Can Proceed to Dashboard: ${canProceed}\n`, 'info');
+    addOutputLine('Use "unlock true" or "unlock false" to change unlock state.', 'info');
+    addOutputLine('Use "proceed true" or "proceed false" to allow users to proceed from instructions.', 'info');
 }
 
 /**
@@ -452,6 +470,46 @@ async function displayRiddlesList() {
         });
     } catch (error) {
         addOutputLine(`Error loading riddles: ${error.message}`, 'error');
+    }
+}
+
+/**
+ * Display drink choices list
+ */
+async function displayDrinkChoices() {
+    adminState.currentView = 'drinks';
+    try {
+        const drinkChoices = await getAllDrinkChoices();
+        
+        if (drinkChoices.length === 0) {
+            addOutputLine('No drink choices found yet.', 'info');
+            return;
+        }
+        
+        addOutputLine(`\nTotal drink choices: ${drinkChoices.length}\n`, 'info');
+        
+        // Group by drink type
+        const drinksByType = {};
+        drinkChoices.forEach(choice => {
+            const drink = choice.drink || 'Not chosen';
+            if (!drinksByType[drink]) {
+                drinksByType[drink] = [];
+            }
+            drinksByType[drink].push(choice);
+        });
+        
+        // Display grouped by drink type
+        Object.entries(drinksByType).forEach(([drink, choices]) => {
+            addOutputLine(`\n${drink}:`, 'info');
+            choices.forEach(choice => {
+                const role = choice.role || choice.userId || 'unknown';
+                const userId = choice.userId || 'N/A';
+                const line = `  - ${role} (${userId})`;
+                addOutputLine(line, 'user');
+            });
+        });
+    } catch (error) {
+        addOutputLine(`Error loading drink choices: ${error.message}`, 'error');
     }
 }
 
@@ -686,23 +744,82 @@ async function handleUnlock(args) {
 }
 
 /**
+ * Handle proceed command - unlock progression from instructions to dashboard
+ */
+async function handleProceed(args) {
+    if (args.length < 1) {
+        addOutputLine('Usage: proceed <true|false>', 'error');
+        return;
+    }
+    
+    const canProceed = args[0].toLowerCase() === 'true';
+    
+    try {
+        await updateAdminState({ canProceedToDashboard: canProceed });
+        addOutputLine(`Users can proceed to dashboard: ${canProceed}`, 'success');
+        adminState.adminState.canProceedToDashboard = canProceed;
+    } catch (error) {
+        addOutputLine(`Error updating proceed state: ${error.message}`, 'error');
+    }
+}
+
+/**
+ * Handle reset vote command - reset drink vote for a user
+ */
+async function handleResetVote(args) {
+    if (args.length < 2 || args[0].toLowerCase() !== 'vote') {
+        addOutputLine('Usage: reset vote <userId>', 'error');
+        addOutputLine('Example: reset vote player1', 'info');
+        return;
+    }
+    
+    const userId = args[1];
+    
+    try {
+        const deleted = await deleteDrinkChoice(userId);
+        if (deleted) {
+            addOutputLine(`Drink vote reset for ${userId}`, 'success');
+            // Refresh drink choices display if currently viewing
+            if (adminState.currentView === 'drinks') {
+                await displayDrinkChoices();
+            }
+        } else {
+            addOutputLine(`No vote found for ${userId}`, 'info');
+        }
+    } catch (error) {
+        addOutputLine(`Error resetting vote: ${error.message}`, 'error');
+    }
+}
+
+/**
  * Add output line
  */
 function addOutputLine(text, type = 'info') {
     const output = document.getElementById('adminOutput');
-    const line = document.createElement('div');
-    line.className = `terminal-line line-${type}`;
     
-    const prompt = document.createElement('span');
-    prompt.className = 'prompt';
-    prompt.textContent = type === 'command' ? '>' : '#';
+    // Split by newlines and create a line for each
+    const lines = text.split('\n');
     
-    const content = document.createElement('span');
-    content.textContent = text;
-    
-    line.appendChild(prompt);
-    line.appendChild(content);
-    output.appendChild(line);
+    lines.forEach((lineText, index) => {
+        // Skip empty lines at the end
+        if (index === lines.length - 1 && !lineText.trim()) {
+            return;
+        }
+        
+        const line = document.createElement('div');
+        line.className = `terminal-line line-${type}`;
+        
+        const prompt = document.createElement('span');
+        prompt.className = 'prompt';
+        prompt.textContent = type === 'command' ? '>' : '#';
+        
+        const content = document.createElement('span');
+        content.textContent = lineText;
+        
+        line.appendChild(prompt);
+        line.appendChild(content);
+        output.appendChild(line);
+    });
     
     // Auto-scroll to bottom
     output.scrollTop = output.scrollHeight;
