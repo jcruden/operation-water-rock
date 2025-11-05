@@ -15,7 +15,9 @@ operation-water-rock/
 ├── js/
 │   ├── app.js          # Login logic and authentication
 │   ├── dashboard.js    # Dashboard functionality and interactions
-│   └── admin.js        # Admin panel logic
+│   ├── admin.js        # Admin panel logic
+│   ├── firebase-config.js       # Firebase config (gitignored)
+│   └── firebase-config.example.js # Firebase config template
 ├── data/
 │   └── dares.json      # Dares data with riddles, hints, and answers
 └── README.md           # This file
@@ -25,11 +27,13 @@ operation-water-rock/
 
 - **Role-based authentication** - Four roles: player1, player2, player3, admin
 - **Terminal-style UI** - CRT aesthetic with green text, scanlines, and flicker effects
+- **Interactive typewriter effect** - Animated text with moving cursor
 - **Points system** - Earn/lose points through dare completion and interactions
 - **Interactive dares** - Complete dares, request hints, submit answers
 - **Dashboard** - Real-time UI updates, locked/unlocked controls, dare management
+- **Firebase integration** - Real-time admin state synchronization
 - **Responsive design** - Works on desktop and mobile devices
-- **No dependencies** - Pure HTML, CSS, and JavaScript
+- **No build dependencies** - Pure HTML, CSS, and JavaScript (ES modules)
 
 ## Local Development
 
@@ -50,10 +54,18 @@ operation-water-rock/
 
 3. Navigate to `http://localhost:8000` in your browser
 
-4. **Test credentials** (dev only):
+4. **Firebase Setup** (optional, for admin features):
+   ```bash
+   # Copy the example config file
+   cp js/firebase-config.example.js js/firebase-config.js
+   
+   # Edit js/firebase-config.js and add your Firebase configuration
+   ```
+
+5. **Test credentials** (dev only):
    - `player1`, `player2`, `player3`, `admin` (password = role name)
 
-5. **Unlock dashboard controls** (for testing):
+6. **Unlock dashboard controls** (for testing):
    ```javascript
    localStorage.setItem('unlocked', 'true');
    ```
@@ -69,13 +81,25 @@ operation-water-rock/
 
 Modern browsers (Chrome, Firefox, Safari, Edge). Requires JavaScript enabled.
 
+## Firebase Setup
+
+This project uses Firebase Firestore for real-time admin state synchronization. To set up:
+
+1. Create a Firebase project at [Firebase Console](https://console.firebase.google.com/)
+2. Enable Firestore Database
+3. Copy `js/firebase-config.example.js` to `js/firebase-config.js`
+4. Add your Firebase configuration to `js/firebase-config.js`
+5. Configure Firestore security rules as needed
+
+**Note**: `firebase-config.js` is gitignored - never commit your actual Firebase config.
+
 ## What's Left to Do
 
 - **Security**: Replace client-side passwords with server-backed authentication
 - **Backend API**: Implement secure password validation, session management, JWT tokens
-- **Database**: Move dares storage from JSON to database
+- **Database**: Move dares storage from JSON to database (Firestore integration started)
 - **Admin Panel**: Complete admin interface for managing dares, users, and settings
-- **Real-time Updates**: WebSocket support for multiplayer features
+- **Real-time Updates**: Complete Firebase integration for multiplayer features
 - **Testing**: Add unit tests and integration tests
 
 ## License

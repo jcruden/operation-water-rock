@@ -16,3 +16,7 @@ npm-debug.log*
 
 # OS files
 Thumbs.db
+
+# Firebase config (contains API keys)
+# Never commit your actual Firebase configuration
+js/firebase-config.js

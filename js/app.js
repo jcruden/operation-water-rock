@@ -59,15 +59,46 @@ document.addEventListener('DOMContentLoaded', function() {
         typewriterContainer.style.display = 'none';
         passwordPromptContainer.style.display = 'block';
         
+        // Show "operation water rock" header at top
+        const passwordHeader = document.getElementById('passwordHeader');
+        passwordHeader.style.display = 'block';
+        
         // Focus the password input
         setTimeout(() => {
             passwordInput.focus();
+            updateCursorPosition();
         }, 100);
+    }
+    
+    // Update cursor position based on input text width
+    function updateCursorPosition() {
+        // Create a temporary span to measure text width
+        const tempSpan = document.createElement('span');
+        tempSpan.style.visibility = 'hidden';
+        tempSpan.style.position = 'absolute';
+        tempSpan.style.whiteSpace = 'pre';
+        tempSpan.style.font = window.getComputedStyle(passwordInput).font;
+        tempSpan.style.fontSize = window.getComputedStyle(passwordInput).fontSize;
+        tempSpan.style.fontFamily = window.getComputedStyle(passwordInput).fontFamily;
+        tempSpan.style.letterSpacing = window.getComputedStyle(passwordInput).letterSpacing;
+        
+        // Use asterisks to represent password characters
+        const displayText = '*'.repeat(passwordInput.value.length);
+        tempSpan.textContent = displayText || 'M'; // Use 'M' as baseline for empty input
+        
+        document.body.appendChild(tempSpan);
+        const textWidth = tempSpan.offsetWidth;
+        document.body.removeChild(tempSpan);
+        
+        // Position cursor after the text
+        cursorBlink.style.marginLeft = `${textWidth}px`;
     }
     
     // Show access denied message with animation
     function showAccessDenied() {
         passwordPromptContainer.style.display = 'none';
+        const passwordHeader = document.getElementById('passwordHeader');
+        passwordHeader.style.display = 'none';
         
         const accessDeniedDiv = document.createElement('div');
         accessDeniedDiv.id = 'accessDeniedMessage';
@@ -80,10 +111,12 @@ document.addEventListener('DOMContentLoaded', function() {
         // Reset after animation
         setTimeout(() => {
             passwordPromptContainer.style.display = 'block';
+            passwordHeader.style.display = 'block';
             typewriterContainer.style.display = 'none';
             accessDeniedDiv.remove();
             passwordInput.value = '';
             passwordInput.focus();
+            updateCursorPosition();
         }, 3000);
     }
     
@@ -117,6 +150,11 @@ document.addEventListener('DOMContentLoaded', function() {
         if (passwordInput.value.length > 0) {
             cursorBlink.style.opacity = '1';
         }
+        
+        // Update cursor position after keypress (for backspace/delete)
+        setTimeout(() => {
+            updateCursorPosition();
+        }, 0);
         
         // Handle Enter key
         if (e.key === 'Enter') {
@@ -154,6 +192,8 @@ document.addEventListener('DOMContentLoaded', function() {
     passwordInput.addEventListener('input', function() {
         // Cursor stays visible during input
         cursorBlink.style.opacity = '1';
+        // Update cursor position as text changes
+        updateCursorPosition();
     });
     
     // Handle keydown events

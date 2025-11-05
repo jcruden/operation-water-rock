@@ -144,6 +144,26 @@ body {
 /* Password prompt container */
 .password-prompt-container {
     margin-top: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.password-header {
+    font-size: clamp(1.2rem, 4vw, 2rem);
+    color: #00ff00;
+    text-shadow: 
+        0 0 5px #00ff00,
+        0 0 10px #00ff00,
+        0 0 15px #00ff00,
+        0 0 20px #00ff00;
+    line-height: 1.6;
+    letter-spacing: 0.1em;
+    text-transform: lowercase;
+    font-weight: normal;
+    margin-bottom: 40px;
+    animation: glow-pulse 2s ease-in-out infinite alternate;
 }
 
 .password-prompt {
@@ -156,6 +176,12 @@ body {
     text-shadow: 
         0 0 5px #00ff00,
         0 0 10px #00ff00;
+}
+
+.password-input-wrapper {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
 }
 
 .prompt-symbol {
@@ -178,8 +204,9 @@ body {
         0 0 10px #00ff00;
     padding: 0;
     margin: 0;
-    width: 300px;
-    max-width: 80%;
+    min-width: 20px;
+    width: auto;
+    max-width: 300px;
     caret-color: transparent;
 }
 
@@ -201,6 +228,9 @@ body {
     animation: blink 1s step-end infinite;
     display: inline-block;
     width: 0.6em;
+    position: absolute;
+    left: 0;
+    transition: margin-left 0.05s ease;
 }
 
 @keyframes blink {
