@@ -6,7 +6,7 @@
 import { saveDrinkChoice, getDrinkChoice, subscribeToAdminState } from './firebase-service.js';
 
 // Instructions text
-const instructionsText = "Access granted. Pack light: pajamas, one outfit (shorts/shirt), swimsuit, sunscreen, toothbrush & toothpaste, water bottle, good walking shoes. Optional: Swiss Army knife, flashlight, helmet.\nEverything must fit in one backpack";
+const instructionsText = "Access granted. Pack light: pajamas, one outfit (shorts/shirt), swimsuit, sunscreen, toothbrush & toothpaste, water bottle, good walking shoes. Optional: Portable charger, Swiss Army knife, flashlight, helmet.\nEverything must fit in one backpack";
 
 // Get user info from sessionStorage
 let userInfo = null;
