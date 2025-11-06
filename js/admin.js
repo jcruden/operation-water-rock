@@ -361,7 +361,7 @@ Available commands:
   user pass <id>    - Change user password\n
   unlock <true|false> - Set unlocked state\n
   proceed <true|false> - Allow users to proceed from instructions to dashboard\n
-  reset vote <userId>  - Reset drink vote for a user (e.g., reset vote Dani)\n
+  reset vote <userId>  - Reset drink vote for a user (e.g., reset vote Zoe)\n
   settings          - Show admin settings\n
   clear             - Clear output    
 `;
@@ -769,7 +769,7 @@ async function handleProceed(args) {
 async function handleResetVote(args) {
     if (args.length < 2 || args[0].toLowerCase() !== 'vote') {
         addOutputLine('Usage: reset vote <userId>', 'error');
-        addOutputLine('Example: reset vote Dani', 'info');
+        addOutputLine('Example: reset vote Zoe', 'info');
         return;
     }
     

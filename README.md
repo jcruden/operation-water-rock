@@ -27,12 +27,11 @@ operation-pahrump/
 
 ## Features
 
-- **Role-based authentication** - Four roles: Dani, JT, Alana, admin
 - **Terminal-style UI** - CRT aesthetic with green text, scanlines, and flicker effects
 - **Interactive typewriter effect** - Animated text with moving cursor
 - **Points system** - Earn points through dare completion (+10 points) and riddle answers (+50 correct, -5 incorrect). Points can be negative.
 - **Simple dares** - One-line challenges that can be completed or trashed
-- **Riddles** - Sequential riddles with hints and answers (shown in order)
+- **Clues** - Sequential clues with hints and answers (shown in order)
 - **Dashboard** - Real-time UI updates, locked/unlocked controls, dare management
 - **Firebase integration** - Real-time admin state synchronization
 - **Responsive design** - Works on desktop and mobile devices
@@ -265,7 +264,7 @@ service cloud.firestore {
 
 - **Authentication**: Firestore `users` collection (passwords not in codebase)
 - **User Management**: Firestore `users` collection (admin manages via admin panel)
-- **Points**: localStorage (per user: `points_Dani`, `points_JT`, `points_Alana`, etc.) - can be negative
+- **Points**: localStorage (per user: `points_Zoe`, `points_JT`, `points_Alana`, etc.) - can be negative
 - **Dares**: Firestore `dares` collection (for admin management and real-time updates)
 - **Riddles**: Firestore `riddles` collection (shown sequentially, real-time updates)
 - **Admin State**: Firestore (unlocked flag for real-time sync)

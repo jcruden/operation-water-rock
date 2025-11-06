@@ -833,11 +833,11 @@ body.dashboard-page {
     }
     
     .dashboard-left {
-        order: 2;
+        order: 1;
     }
     
     .dares-panel {
-        order: 1;
+        order: 2;
     }
 }
 

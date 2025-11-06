@@ -31,9 +31,9 @@ export async function initAdminState() {
 export async function initUsers() {
     const users = [
         { 
-            role: 'Dani', 
-            password: prompt('Enter password for Dani (or press Cancel for default):') || 'change_me_Dani',
-            username: 'Dani'
+            role: 'Zoe', 
+            password: prompt('Enter password for Zoe (or press Cancel for default):') || 'change_me_Zoe',
+            username: 'Zoe'
         },
         { 
             role: 'JT', 

@@ -15,9 +15,9 @@ admin/state
 
 ### 2. `users/{userId}` (Collection)
 ```
-users/Dani
-  - role: string ("Dani")
-  - username: string ("Dani")
+users/Zoe
+  - role: string ("Zoe")
+  - username: string ("Zoe")
   - password: string (plaintext password)
   - active: boolean (true)
   - updatedAt: timestamp
@@ -164,9 +164,9 @@ riddles/jkl012
 #### Create Users:
 - Collection ID: `users`
 - For each user, create a document:
-  - Document ID: `Dani`, `JT`, `Alana`, `admin`
+  - Document ID: `Zoe`, `JT`, `Alana`, `admin`
   - Fields:
-    - `role` (string): `Dani`, `JT`, `Alana`, or `admin`
+    - `role` (string): `Zoe`, `JT`, `Alana`, or `admin`
     - `username` (string): same as role
     - `password` (string): your chosen password
     - `active` (boolean): `true`
@@ -217,9 +217,9 @@ Firestore Database
 │       └── updatedAt: timestamp
 │
 ├── users (collection)
-│   ├── Dani (document)
-│   │   ├── role: "Dani"
-│   │   ├── username: "Dani"
+│   ├── Zoe (document)
+│   │   ├── role: "Zoe"
+│   │   ├── username: "Zoe"
 │   │   ├── password: "your_password"
 │   │   ├── active: true
 │   │   └── updatedAt: timestamp
@@ -251,7 +251,7 @@ Firestore Database
 ## Important Notes
 
 1. **Document IDs**: 
-   - For `users`: Use role names as document IDs (`Dani`, `JT`, `Alana`, `admin`)
+   - For `users`: Use role names as document IDs (`Zoe`, `JT`, `Alana`, `admin`)
    - For `dares` and `riddles`: Use auto-generated IDs (Firebase will create them)
 
 2. **Ordering**: 
@@ -269,7 +269,7 @@ Firestore Database
 
 5. **Points**: 
    - Points are stored in `localStorage`, NOT in Firestore
-   - Each user's points are stored as: `points_Dani`, `points_JT`, `points_Alana`, etc.
+   - Each user's points are stored as: `points_Zoe`, `points_JT`, `points_Alana`, etc.
 
 ## Quick Setup Checklist
 
