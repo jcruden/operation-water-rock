@@ -27,7 +27,9 @@ import {
     updateClue,
     deleteClue,
     getAllUsersClueProgress,
-    updateUserClueProgress
+    updateUserClueProgress,
+    setUserPoints,
+    getAllUsers
 } from './firebase-service.js';
 
 // Admin state
@@ -333,7 +335,11 @@ async function processCommand(command) {
                 break;
             case 'reset':
             case 'resetvote':
-                await handleResetVote(args);
+                if (args.length > 0 && args[0].toLowerCase() === 'points') {
+                    await handleResetPoints(args);
+                } else {
+                    await handleResetVote(args);
+                }
                 break;
             case 'settings':
                 displaySettings();
@@ -381,6 +387,7 @@ Available commands:
   unlock <true|false> - Set unlocked state\n
   proceed <true|false> - Allow users to proceed from instructions to dashboard\n
   reset vote <userId>  - Reset drink vote for a user (e.g., reset vote Zoe)\n
+  reset points all     - Reset all user points to zero\n
   settings          - Show admin settings\n
   clear             - Clear output    
 `;
@@ -981,6 +988,40 @@ async function handleProceed(args) {
         adminState.adminState.canProceedToDashboard = canProceed;
     } catch (error) {
         addOutputLine(`Error updating proceed state: ${error.message}`, 'error');
+    }
+}
+
+/**
+ * Handle reset points command - reset all user points to zero
+ */
+async function handleResetPoints(args) {
+    if (args.length < 2 || args[1].toLowerCase() !== 'all') {
+        addOutputLine('Usage: reset points all', 'error');
+        addOutputLine('This will reset all user points to zero', 'info');
+        return;
+    }
+    
+    if (!confirm('Are you sure you want to reset ALL user points to zero?')) {
+        return;
+    }
+    
+    try {
+        const users = await getAllUsers();
+        let resetCount = 0;
+        
+        for (const user of users) {
+            setUserPoints(user.id, 0);
+            resetCount++;
+        }
+        
+        addOutputLine(`Reset points to zero for ${resetCount} users`, 'success');
+        
+        // Refresh points display if currently viewing
+        if (adminState.currentView === 'points') {
+            await displayPointsList();
+        }
+    } catch (error) {
+        addOutputLine(`Error resetting points: ${error.message}`, 'error');
     }
 }
 
