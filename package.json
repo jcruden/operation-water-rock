@@ -3,6 +3,8 @@
   "version": "1.0.0",
   "description": "Operation Pahrump - Import scripts",
   "scripts": {
+    "start": "python3 -m http.server 8000 || python -m SimpleHTTPServer 8000 || npx http-server -p 8000",
+    "serve": "npx http-server -p 8000",
     "import-riddles": "node import-riddles.js",
     "import-dares": "node import-dares.js",
     "import-clues": "node import-clues.js",
